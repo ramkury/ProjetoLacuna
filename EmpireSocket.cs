@@ -28,8 +28,9 @@ namespace ProjetoLacuna
             Console.WriteLine(String.Format("Sent >> {0}", message));
         }
 
-        public int ReadMessage(Byte[] read_data)
+        public byte[] ReadMessage(int max_size)
         {
+            Byte[] read_data = new Byte[max_size];
             var stream = client.GetStream();
             while (true)
             {
@@ -48,7 +49,7 @@ namespace ProjetoLacuna
                 }
                 if (VerifyChecksum(read_data, bytes_read))
                 {
-                    return bytes_read;  
+                    return TrimToData(read_data, bytes_read);
                 }
                 else
                 {
@@ -61,6 +62,11 @@ namespace ProjetoLacuna
         {
             byte checksum = data.Take(size - 1).Aggregate((x, y) => (byte)(x + y));
             return (checksum == data[size - 1]);
+        }
+
+        private byte[] TrimToData(byte[] data, int size)
+        {
+            return data.Skip(2).Take(size - 3).ToArray();
         }
     }
 }
