@@ -25,7 +25,7 @@ namespace ProjetoLacuna
             var stream = client.GetStream();
             byte[] bytes = Encoding.ASCII.GetBytes(message);
             stream.Write(bytes, 0, bytes.Length);
-            Console.WriteLine(String.Format("Sent >> {0}", message));
+            Console.WriteLine("(Empire) << " + message);
         }
 
         public byte[] ReadMessage(int max_size)
@@ -49,10 +49,13 @@ namespace ProjetoLacuna
                 }
                 if (VerifyChecksum(read_data, bytes_read))
                 {
-                    return TrimToData(read_data, bytes_read);
+                    var data = TrimToData(read_data, bytes_read);
+                    Console.WriteLine("(Empire) >> " + BitConverter.ToString(data));
+                    return data;
                 }
                 else
                 {
+                    Console.WriteLine("Failed to verify checksum. Message corrupted.");
                     SendMessage("send again"); 
                 }
             }
