@@ -12,21 +12,23 @@ namespace ProjetoLacuna
     {
         private const String address = "lacuna.ddns.net";
         private const Int32 port = 21820;
+        public Int32 max_size;
         private TcpClient client;
 
-        public EmpireSocket()
+        public EmpireSocket(Int32 max_message_size)
         {
             client = new TcpClient(address, port);
+            max_size = max_message_size;
         }
 
         public void SendMessage(Data message)
         {
             var stream = client.GetStream();
             stream.Write(message.Bytes, 0, message.Length);
-            Console.WriteLine("(Empire) << " + message);
+            Console.WriteLine("(Empire) << " + message.Str);
         }
 
-        public Data ReadMessage(int max_size)
+        public Data ReadMessage()
         {
             Byte[] read_data = new Byte[max_size];
             var stream = client.GetStream();

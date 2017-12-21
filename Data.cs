@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace ProjetoLacuna
 {
     class Data
     {
+        private static Regex regex = new Regex(@"x(\d+)y(\d+)");
         public byte[] Bytes;
         public String Str
         {
@@ -21,6 +23,17 @@ namespace ProjetoLacuna
             byte key = CryptXOR.FindKey(new Data("Vader"), this);
             CryptXOR.ToggleEncryption(Bytes, key);
             return this;
+        }
+
+        public bool HasCoordinates()
+        {
+            var m = regex.Match(Str);
+            return m.Success;
+        }
+
+        public bool Equals(Data other)
+        {
+            return Str.Equals(other.Str);
         }
     }
 }
