@@ -20,15 +20,14 @@ namespace ProjetoLacuna
             client = new TcpClient(address, port);
         }
 
-        public void SendMessage(String message)
+        public void SendMessage(Data message)
         {
             var stream = client.GetStream();
-            byte[] bytes = Encoding.ASCII.GetBytes(message);
-            stream.Write(bytes, 0, bytes.Length);
+            stream.Write(message.Bytes, 0, message.Length);
             Console.WriteLine("(Empire) << " + message);
         }
 
-        public byte[] ReadMessage(int max_size)
+        public Data ReadMessage(int max_size)
         {
             Byte[] read_data = new Byte[max_size];
             var stream = client.GetStream();
@@ -49,14 +48,14 @@ namespace ProjetoLacuna
                 }
                 if (VerifyChecksum(read_data, bytes_read))
                 {
-                    var data = TrimToData(read_data, bytes_read);
-                    Console.WriteLine("(Empire) >> " + BitConverter.ToString(data));
+                    var data = new Data(TrimToData(read_data, bytes_read));
+                    Console.WriteLine("(Empire) >> " + BitConverter.ToString(data.Bytes));
                     return data;
                 }
                 else
                 {
                     Console.WriteLine("Failed to verify checksum. Message corrupted.");
-                    SendMessage("send again"); 
+                    SendMessage(new Data("send again")); 
                 }
             }
         }

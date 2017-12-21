@@ -11,6 +11,7 @@ namespace ProjetoLacuna
             get { return Encoding.ASCII.GetString(Bytes); }
             set { Bytes = Encoding.ASCII.GetBytes(value); }
         }
+        public int Length { get => Bytes.Length; }
 
         public Data(byte[] data) => Bytes = data;
         public Data(String data) => Str = data;
