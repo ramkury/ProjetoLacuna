@@ -21,9 +21,9 @@ namespace ProjetoLacuna
             return 0;
         }
 
-        public static byte FindKey(String common, byte[] encrypted_data)
+        public static byte FindKey(Data common, Data encrypted_data)
         {
-            return FindKey(Encoding.ASCII.GetBytes(common), encrypted_data);
+            return FindKey(common.Bytes, encrypted_data.Bytes);
         }
 
         public static void ToggleEncryption(byte[] data, byte key)

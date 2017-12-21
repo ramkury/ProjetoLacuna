@@ -15,5 +15,12 @@ namespace ProjetoLacuna
 
         public Data(byte[] data) => Bytes = data;
         public Data(String data) => Str = data;
+
+        public Data DecryptEmpire()
+        {
+            byte key = CryptXOR.FindKey(new Data("Vader"), this);
+            CryptXOR.ToggleEncryption(Bytes, key);
+            return this;
+        }
     }
 }

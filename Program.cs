@@ -13,28 +13,46 @@ namespace ProjetoLacuna
         static int Main(string[] args)
         {
             Data empire_response, rebels_response;
-            var socket = new EmpireSocket();
+            var empireSocket = new EmpireSocket();
+            var rebelsSocket = new RebelsSocket();
+            var cryptBFF = new CryptBFF();
             const String token = "1d0b1da2-0971-4236-9697-4f2a09588d6c";
             Console.WriteLine("Sending token " + token + " to Empire server");
-            socket.SendMessage(new Data(token));
-            empire_response = socket.ReadMessage(256);
+            empireSocket.SendMessage(new Data(token));
+            empire_response = empireSocket.ReadMessage(256);
             if (!empire_response.Str.Equals("User accepted."))
             {
                 Console.WriteLine("Failed to communicate with the Empire server");
-                return -1; 
+                return -1;
             }
+            Console.WriteLine("Sending token " + token + " to Rebels server");
+            rebelsSocket.SendMessage(new Data(token));
+            rebels_response = rebelsSocket.ReadMessage(256);
+            var nums = rebels_response.Str.Split(' ');
+            cryptBFF.exponent = Int32.Parse(nums[0]);
+            cryptBFF.modulus = Int32.Parse(nums[1]);
 
+            return 0;
+
+            //var data = new Data("Hi, my name is Vader");
+            //CryptXOR.ToggleEncryption(data.Bytes, 30);
+            //Console.WriteLine(data.Str);
+            //Console.WriteLine(data.DecryptEmpire().Str);
+            //Console.Read();
+            //return 0;
+
+            //var rebelsSocket = new RebelsSocket();
 
             //while (true)
             //{
             //    Console.WriteLine("What message do you want to send?");
             //    var message = Console.ReadLine();
-            //    socket.SendMessage(message);
-            //    empire_response = socket.ReadMessage(256);
-            //    var str_response = Encoding.ASCII.GetString(empire_response, 0, empire_response.Length);
-            //    Console.WriteLine(String.Format("Received (bytes) << {0}", BitConverter.ToString(empire_response)));
-            //    Console.WriteLine(String.Format("Received (string) << {0}", str_response));
+            //    rebelsSocket.SendMessage(new Data(message));
+            //    var response = rebelsSocket.ReadMessage(256);
+            //    Console.WriteLine(String.Format("Received (bytes) << {0}", BitConverter.ToString(response.Bytes)));
+            //    Console.WriteLine(String.Format("Received (string) << {0}", response.Str));
             //}
+
 
             //byte[] vader = Encoding.ASCII.GetBytes("Vader");
             //byte[] message = Encoding.ASCII.GetBytes("Meu nome é Vader");
